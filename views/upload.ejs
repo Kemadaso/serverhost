@@ -3,24 +3,57 @@
   <head>
     <title>Test Upload</title>
     <link rel='stylesheet' href='/stylesheets/style.css' />
-    
+    <style>
+      .progress-wrapper {
+          width:100%;
+      }
+      .progress-wrapper .progress {
+          background-color:green;
+          width:0%;
+          padding:5px 0px 5px 0px;
+      }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js"></script>
     <script src="/javascripts/main.js"></script>
+    <script>
+      function postFile() {
+        var formdata = new FormData();
+    
+        formdata.append('mifile', $('#mifile')[0].files[0]);
+    
+        var request = new XMLHttpRequest();
+    
+        request.upload.addEventListener('progress', function (e) {
+            var file1Size = $('#mifile')[0].files[0].size;
+    
+            if (e.loaded <= file1Size) {
+                var percent = Math.round(e.loaded / file1Size * 100);
+                $('#progress-bar-file1').width(percent + '%').html(percent + '%');
+            } 
+    
+            if(e.loaded == e.total){
+                $('#progress-bar-file1').width(100 + '%').html(100 + '%');
+            }
+        });   
+    
+        request.open('post', '/uploadfile')
+        request.timeout = 45000
+        request.send(formdata)
+      }
+    </script>
    
   </head>
   <body>
     <h1>test Upload</h1>
     
-    <form 
-      action="/uploadfile" 
-      method="post"
-      encType="multipart/form-data"
-      >
-
-      <input type="file" name="mifile"><br/><br/><br/>
-      <button type="submit">enviar archivo</button>
-
+    <form id="formupload">
+      <input type="file" name="mifile" id="mifile" multiple><br/><br/>
+      <div class="progress-wrapper">
+        <div id="progress-bar-file1" class="progress"></div>
+      </div>
+      <button type="button" onclick="postFile()">Upload File</button>
     </form>
-    
+    <!-- mi comment -->
 
   </body>
 </html>

@@ -32,6 +32,8 @@ router.post('/uploadfile', function(req, res, next) {
   */
 
  let mifile = req.files.mifile
+ //console.log(mifile)
+ //return res.json(mifile.size)
 
  if(!mifile.truncated) {
     mifile.mv(path.join(global.__basedir,`/storage/${mifile.name}`), function(err) {

@@ -1,13 +1,16 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+global.__basedir = __dirname
 
-const fileUpload = require('express-fileupload');
+var createError = require('http-errors')
+var express = require('express')
+var path = require('path')
+var cookieParser = require('cookie-parser')
+var logger = require('morgan')
+var middlewaredirectory = require('./src/middlewaredirectory')
+
+const fileUpload = require('express-fileupload')
 const cors = require('cors');
 
-global.__basedir = __dirname
+
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -24,18 +27,20 @@ app.set('view engine', 'ejs');
 app.use(fileUpload({
   useTempFiles : true,
   tempFileDir : path.join(__dirname, 'tmp'),
-  limits: { fileSize: 100 * 1024 * 1024 },
-}));
+  limits: { fileSize: 5000 * 1024 * 1024 },
+  debug: false
+}))
 
-app.use(cors());
-app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(middlewaredirectory)
+app.use(cors())
+app.use(logger('dev'))
+app.use(express.json())
+app.use(express.urlencoded({ extended: false }))
+app.use(cookieParser())
+app.use(express.static(path.join(__dirname, 'public')))
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use('/', indexRouter)
+app.use('/users', usersRouter)
 
 app.use('/favicon.ico', function(req, res, next) {
   res.render('index', { title: 'Express' })
