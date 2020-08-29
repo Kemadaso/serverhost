@@ -3,18 +3,27 @@ var router = express.Router()
 
 var path = require('path')
 const fs = require('fs')
+const helper = require('../src/helpers')
 
 
 /* GET home page. */
+/*
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' })
-})
+})*/
 
 router.get('/upload', function(req, res, next) {
   res.render('upload', { title: 'Express' })
 })
 
 router.post('/uploadfile', function(req, res, next) {
+
+  console.log(req.files)
+  console.log(req.body)
+  //return res.json(req.body)
+  const namefolder = helper.string_to_slug(req.body.namefolder)
+  let subfolder = path.join(global.__basedir,`/storage/${namefolder}`)
+
   /*
   {
     "name":"esa gente Huaycan Instituto.mp4",
@@ -31,29 +40,43 @@ router.post('/uploadfile', function(req, res, next) {
   }
   */
 
- let mifile = req.files.mifile
+ //let mifile = req.files.mifile
+ let mifile = req.files.files
  //console.log(mifile)
  //return res.json(mifile.size)
 
- if(!mifile.truncated) {
-    mifile.mv(path.join(global.__basedir,`/storage/${mifile.name}`), function(err) {
-      if(err) {
-        return res.status(500).send(err)
-      }
-    
-      console.log('archivo subido')
-      res.send('File Upload')
-    
-    })
- } else {
-  try {
-      fs.unlinkSync(mifile.tempFilePath)
-      //file removed
-    } catch(err) {
-      console.error(err)
+  if (!fs.existsSync(subfolder)){
+    fs.mkdirSync(subfolder)
+  } else {
+    subfolder = path.join(global.__basedir,`/storage/${namefolder}-${helper.makeid(5)}`)
+    fs.mkdirSync(subfolder)
+  }
+
+  for(const file of req.files.files) {
+
+    if(!file.truncated) {
+      file.mv(path.join(subfolder,`${file.name}`), function(err) {
+        console.log(err)
+        if(err) {
+          //return res.status(500).send(err)
+        }
+        //console.log('archivo subido')
+      })
+    } else {
+      try {
+          fs.unlinkSync(file.tempFilePath)
+          //file removed
+        } catch(err) {
+          console.error(err)
+        }
+        //return res.status(500).send("size file was truncated")
     }
-    return res.status(500).send("size file was truncated")
- }
+
+  }
+
+  res.send('File Upload')
+
+ 
 
 
 

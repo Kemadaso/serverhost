@@ -14,7 +14,7 @@ module.exports = function(req, res, next) {
     }
 
     files.forEach(function(file) {
-       console.log(file, ' is file -> ',fs.lstatSync(path.join(basedir, file)).isFile())
+       //console.log(file, ' is file -> ',fs.lstatSync(path.join(basedir, file)).isFile())
 
     })
 
