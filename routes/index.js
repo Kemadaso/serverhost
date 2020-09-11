@@ -40,10 +40,9 @@ router.post('/uploadfile', function(req, res, next) {
   }
   */
 
- //let mifile = req.files.mifile
- let mifile = req.files.files
- //console.log(mifile)
- //return res.json(mifile.size)
+ 
+  let mifile = req.files.files
+ 
 
   if (!fs.existsSync(subfolder)){
     fs.mkdirSync(subfolder)
@@ -52,7 +51,15 @@ router.post('/uploadfile', function(req, res, next) {
     fs.mkdirSync(subfolder)
   }
 
-  for(const file of req.files.files) {
+  let files = []
+
+  if(!Array.isArray(req.files.files)) {
+    files.push(req.files.files)
+  } else {
+    files = [...req.files.files]
+  }
+
+  for(const file of files) {
 
     if(!file.truncated) {
       file.mv(path.join(subfolder,`${file.name}`), function(err) {

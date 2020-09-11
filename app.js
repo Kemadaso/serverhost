@@ -15,6 +15,7 @@ const cors = require('cors');
 var indexRouter = require('./routes/index')
 var usersRouter = require('./routes/users')
 var filesRouter = require('./routes/files')
+var taskRouter = require('./routes/task')
 
 
 var app = express();
@@ -42,6 +43,7 @@ app.use(cookieParser())
 app.use('/', indexRouter)
 app.use('/users', usersRouter)
 app.use('/files', filesRouter)
+app.use('/task', taskRouter)
 
 
 app.use('/favicon.ico', function(req, res, next) {

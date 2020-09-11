@@ -2,7 +2,7 @@
 
 
 
-module.exports.string_to_slug = function (str) {
+exports.string_to_slug = function (str) {
   str = str.replace(/^\s+|\s+$/g, ""); // trim
   str = str.toLowerCase();
 
@@ -26,7 +26,7 @@ module.exports.string_to_slug = function (str) {
 }
 
 
-module.exports.makeid = function(length) {
+exports.makeid = function(length) {
   var result           = '';
   var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   var charactersLength = characters.length;
@@ -34,4 +34,33 @@ module.exports.makeid = function(length) {
      result += characters.charAt(Math.floor(Math.random() * charactersLength));
   }
   return result;
+}
+
+exports.namerar = function(str = '') {
+  
+  const obj = {
+    i: '1',
+    a: '4',
+    o: '0',
+    e: '3'
+  }
+
+  let name = ''
+
+  str = exports.string_to_slug(str)
+
+  for(const s of str) {
+    if(obj.hasOwnProperty(s)) {
+      name += obj[s]
+    } else {
+      if(Math.floor(Math.random() * 100) > 50) {
+        name += s.toUpperCase()
+      } else {
+        name += s
+      }
+    }
+  }
+
+  return name.substring(0, 20)
+
 }

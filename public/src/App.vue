@@ -60,16 +60,16 @@
             
             <a-menu slot="overlay">
               
-              <a-menu-item key="1" @click="openfolder({folder: item.item})" v-if="item.type == 'directory' ">
+              <a-menu-item key="1" @click="openfolder({folder: item.item})" v-if="item.type == 'directory' " >
                <a-icon type="folder-open" theme="twoTone" />Ver Folder
               </a-menu-item>
-              <a-menu-item key="2">
+              <a-menu-item key="2" @click="maketask(item)" v-if="item.type == 'directory' ">
                 <a-icon type="code" theme="twoTone" two-tone-color="#52c41a" />Subir Carpeta
               </a-menu-item>
               <a-menu-item key="3" @click="actionremove(item)">
                 <a-icon type="delete" theme="twoTone" two-tone-color="#eb2f96" />Eliminar
               </a-menu-item>
-              <a-menu-item key="4">
+              <a-menu-item key="4" v-if="item.type == 'directory' ">
                  <a-icon type="control" theme="twoTone" />Configurar
               </a-menu-item>
             </a-menu>
@@ -224,11 +224,17 @@ export default {
 
       }).catch(err => console.log(err))
     },
+    maketask(item) {
+      http.get(`/task/${item.pathfile}`).then(res => {
+        console.log(res.data)
+      }).catch(err => console.log(err))
+    },
     typeicon(item) {
       //console.log(item)
       let exts = {
         'video-camera' : ['mkv', 'avi', 'flv', 'mp4'],
         'file-image' : ['jpg', 'jpeg', 'png', 'bmp'],
+        'gift' : ['rar', 'zip'],
         'sound' : ['mp3'],
       }
 

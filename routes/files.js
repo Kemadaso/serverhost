@@ -74,13 +74,13 @@ router.get('/root/remove/:item', function(req, res, next) {
       } else if(type.isFile()) {
         fs.unlinkSync(item)
       }
-      res.json({success: true})
+      return res.json({success: true})
 
     }
 
   }
   
-  res.json({success: false})
+  return res.json({success: false})
 
 
 })
